@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post '/sessions' => 'sessions#create'
 
   post '/games' => 'games#create'
+  patch '/games/:id/start' => 'games#start'
 
   post '/players' => 'players#create'
 end

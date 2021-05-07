@@ -24,4 +24,46 @@ class Api::GamesController < ApplicationController
       render 'show.json.jbuilder'
     end
   end
+
+  def start
+    @game = Game.find(params[:id])
+
+    if !@game.has_started
+      @game.has_started = true
+
+      players = @game.players
+      president_id = @game.players.find_by({
+        turn_number: 0
+      })
+
+      if @game.save
+        palpatine_count = 1
+        if players.length < 7
+          separatist_count = 1
+          republic_count = players.length - 2
+        elsif players.length < 9
+          separatist_count = 2
+          republic_count = players.length - 3
+        else
+          separatist_count = 3
+          republic_count = players.length - 4
+        end
+      end
+
+      shuffled_players = players.shuffle
+      shuffled_players.each do |player, i|
+        if i < palpatine_count
+          player.identity = 'palpatine'
+        elsif i < palpatine_count + separatist_count
+          player.identity = 'separatist'
+        else
+          player.identity = 'republic'
+        end
+
+        player.save
+      end
+    end
+
+    render 'show.json.jbuilder'
+  end
 end

@@ -66,4 +66,24 @@ class Api::GamesController < ApplicationController
 
     render 'show.json.jbuilder'
   end
+
+  def show
+    @game = Game.find(params[:id])
+
+    render 'show.json.jbuilder'
+  end
+
+  def update
+    @game = Game.find(params[:id])
+    @game.queen_id = params[:queen_id] || @game.queen_id
+    @game.chancellor_id = params[:chancellor_id] || @game.chancellor_id
+    @game.enacted_republic_policy_count = params[:enacted_republic_policy_count] || @game.enacted_republic_policy_count
+    @game.enacted_separatist_policy_count = params[:enacted_separatist_policy_count] || @game.enacted_separatist_policy_count
+    @game.appointed_chancellor_id = params[:appointed_chancellor_id] || @game.appointed_chancellor_id
+    @game.turn_number = params[:turn_number] || @game.turn_number
+
+    if @game.save
+      render 'show.json.jbuilder'
+    end
+  end
 end

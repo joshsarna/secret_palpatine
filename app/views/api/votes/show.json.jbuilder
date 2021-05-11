@@ -1,0 +1,1 @@
+json.in_favor @vote.in_favor

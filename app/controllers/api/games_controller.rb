@@ -2,14 +2,18 @@ class Api::GamesController < ApplicationController
   def create
     @game = Game.new({
       has_started: false,
-      president_id: nil,
+      queen_id: nil,
       chancellor_id: nil,
       remaining_republic_policy_count: 6,
       remaining_separatist_policy_count: 11,
       enacted_republic_policy_count: 0,
       enacted_separatist_policy_count: 0,
       appointed_chancellor_id: nil,
-      turn_number: 0
+      turn_number: 0,
+      remaining_policies: ['R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'].shuffle.join(''),
+      failed_election_count: 0,
+      current_hand_republic_policy_count: 0,
+      current_hand_separatist_policy_count: 0,
     })
 
     if @game.save
@@ -32,7 +36,7 @@ class Api::GamesController < ApplicationController
       @game.has_started = true
 
       players = @game.players
-      president_id = @game.players.find_by({
+      queen_id = @game.players.find_by({
         turn_number: 0
       })
 

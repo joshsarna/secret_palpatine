@@ -2,7 +2,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   def current_user
-    auth_headers = request.headers["Authorization"]
+    auth_headers = 'Bearer ' + request.headers["Authorization"]
+    p 'auth_headers'
+    p auth_headers
     if auth_headers.present? && auth_headers[/(?<=\A(Bearer ))\S+\z/]
       token = auth_headers[/(?<=\A(Bearer ))\S+\z/]
       begin

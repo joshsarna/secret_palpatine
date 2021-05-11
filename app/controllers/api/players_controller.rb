@@ -20,4 +20,13 @@ class Api::PlayersController < ApplicationController
       render 'show.json.jbuilder'
     end
   end
+
+  def update
+    @player = Player.find(params[:id])
+    @player.is_dead = params[:is_dead] || @player.is_dead
+
+    if @player.save
+      render 'show.json.jbuilder'
+    end
+  end
 end

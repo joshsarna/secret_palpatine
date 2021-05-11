@@ -1,0 +1,50 @@
+.policy-board {
+  opacity: 70%;
+  margin: 10px;
+  padding: 5px;
+  width: fit-content;
+  color: white;
+}
+
+#separatist-policy-board {
+  background-color: red;
+}
+
+#republic-policy-board {
+  background-color: blue;
+}
+
+.policy {
+  width: 100px;
+  height: 130px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  margin: 2px;
+  padding: 5px;
+  font-size: 50px;
+}
+
+.enacted-policy {
+  background-color: black
+  opacity: 10%;
+}
+
+.empty-policy {
+  opacity: 30%;
+}
+
+.player-card {
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  width: fit-content;
+  height: 35px;
+  overflow-x: hidden;
+  margin: 10px;
+  padding: 5px;
+}
+
+.dead-player {
+  background-color: gray;
+}

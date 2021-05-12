@@ -166,6 +166,8 @@
         {{ someoneElse.identity }}
       </div>
 
+      <div v-if="!game.has_started"><button v-on:click="start()">Start</button></div>
+
       <div v-if="game.i_am_queen">
         <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 3">
           <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>

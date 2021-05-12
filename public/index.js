@@ -121,6 +121,11 @@ var GameShowPage = {
   },
 
   methods: {
+    start: function() {
+      axios.patch('/api/games/' + this.game.id + '/start').then((response) => {
+        this.game = response.data;
+      });
+    },
     appointChancellor: function(playerId) {
       const params = {chancellor_id: playerId};
       axios.patch('/api/games/' + this.game.id, params).then((response) => {

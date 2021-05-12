@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     patch '/games/:id' => 'games#update'
 
     post '/players' => 'players#create'
+    get '/players/:id' => 'players#show'
     patch '/players/:id' => 'players#update'
 
     post '/votes' => 'votes#create'

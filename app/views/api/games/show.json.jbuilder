@@ -24,3 +24,4 @@ json.i_am_appointed_chancellor @game.appointed_chancellor_id === @game.players.f
 
 json.i_have_voted !!@game.votes.find_by({player_id: @game.players.find_by({user_id: current_user.id}).id})
 json.executive_action_required @game.queen_id === @game.players.find_by({user_id: current_user.id}).id ? @game.executive_action_required : nil
+json.my_identity @game.players.find_by({user_id: current_user.id}).identity

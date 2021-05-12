@@ -139,7 +139,8 @@
         <div v-if="game.queen_id === player.id">Queen</div>
         <div v-if="game.chancellor_id === player.id">Chancellor</div>
         <div v-if="game.appointed_chancellor_id === player.id">Appointed Chancellor</div>
-        <div v-if="game.i_am_queen && !game.appointed_chancellor_id && game.last_queen !== player.id && game.last_chancellor !== player.id && game.queen_id !== player.id"><button v-on:click="appointChancellor(player.id)">Appoint Chancellor</button></div>
+        <div v-if="game.i_am_queen && !game.appointed_chancellor_id && game.last_queen !== player.id && game.last_chancellor !== player.id && game.queen_id !== player.id && !player.is_dead"><button v-on:click="appointChancellor(player.id)">Appoint Chancellor</button></div>
+        <div v-if="game.i_am_queen && game.executive_action_required === 'order66' && !player.is_dead"><button v-on:click="kill(player.id)">Order 66</button></div>
       </div>
       </div>
     </div>
@@ -150,6 +151,11 @@
     </div>
 
     <div v-if="!game.winner">
+
+      <div v-if="!!nextThreePolicies">
+        Next Three Policies:
+        {{ nextThreePolicies }}
+      </div>
 
       <div v-if="game.i_am_queen">
         <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 3">

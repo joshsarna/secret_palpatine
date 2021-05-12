@@ -91,7 +91,7 @@ var GameShowPage = {
         current_hand_republic_policy_count: 0,
         current_hand_separatist_policy_count: 0,
       },
-      canSteal: false,
+      nextThreePolicies: null,
       pollId: null
     };
   },
@@ -128,7 +128,8 @@ var GameShowPage = {
     },
     discardSeparatistCard: function() {
       const params = {
-        current_hand_separatist_policy_count: this.game.current_hand_separatist_policy_count - 1
+        current_hand_separatist_policy_count: this.game.current_hand_separatist_policy_count - 1,
+        next_executive_action: this.board.separatistPolicyPowers[this.game.enacted_separatist_policy_count + 1]
       };
       axios.patch('/api/games/' + this.game.id, params).then((response) => {
         this.game = response.data;
@@ -136,7 +137,8 @@ var GameShowPage = {
     },
     discardRepublicCard: function() {
       const params = {
-        current_hand_republic_policy_count: this.game.current_hand_republic_policy_count - 1
+        current_hand_republic_policy_count: this.game.current_hand_republic_policy_count - 1,
+        next_executive_action: this.board.separatistPolicyPowers[this.game.enacted_separatist_policy_count + 1]
       };
       axios.patch('/api/games/' + this.game.id, params).then((response) => {
         this.game = response.data;
@@ -149,6 +151,17 @@ var GameShowPage = {
       };
       axios.patch('/api/votes', params).then((response) => {
         this.game = response.data;
+      });
+    },
+    kill: function(playerId) {
+      axios.patch('/api/games/' + playerId, {is_dead: true});
+    },
+    peak: function() {
+      axios.get('/api/games/' + this.game.id + '/peak').then((response) => {
+        this.nextThreePolicies = response.data.nextThreePolicies;
+        setInterval(() => {
+          this.nextThreePolicies = null;
+        }, 15000);
       });
     }
   },

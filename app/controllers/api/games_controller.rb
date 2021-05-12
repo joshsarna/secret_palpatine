@@ -1,4 +1,9 @@
 class Api::GamesController < ApplicationController
+  def peak
+    game = Game.find(params[:id])
+    render {next_three_policies: game.remaining_policies[-3..-1]}
+  end
+
   def create
     @game = Game.new({
       has_started: false,
@@ -90,10 +95,13 @@ class Api::GamesController < ApplicationController
 
     if @game.current_hand_separatist_policy_count == 1 && @game.current_hand_republic_policy_count == 0
       @game.enacted_separatist_policy_count += 1
+      @game.executive_action_required = params[:executive_action_required]
       if @game.enacted_separatist_policy_count == 6
         @game.winner = 'sith'
       else
-        @game.next_queen
+        if !@game.executive_action_required
+          @game.next_queen
+        end
       end
     elsif @game.current_hand_separatist_policy_count == 0 && @game.current_hand_republic_policy_count == 1
       @game.current_hand_republic_policy_count += 1

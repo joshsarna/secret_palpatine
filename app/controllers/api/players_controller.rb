@@ -26,6 +26,9 @@ class Api::PlayersController < ApplicationController
     @player.is_dead = params[:is_dead] || @player.is_dead
 
     if @player.save
+      @game.executive_action_required = nil
+      @game.save
+      @game.next_queen
       render 'show.json.jbuilder'
     end
   end

@@ -90,6 +90,7 @@ var GameShowPage = {
         turn_number: 0,
         current_hand_republic_policy_count: 0,
         current_hand_separatist_policy_count: 0,
+        players: [],
       },
       nextThreePolicies: null,
       someoneElse: {},
@@ -216,7 +217,7 @@ var GameShowPage = {
 
   computed: {
     board: function() {
-      return boards[this.game.players.length()];
+      return boards[this.game.players.length] || boards[5];
     },
     enactedSeparatistPolicies: function() {
       return Array(this.game.enacted_separatist_policy_count);

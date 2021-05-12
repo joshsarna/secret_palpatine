@@ -22,16 +22,18 @@
   border-color: black;
   margin: 2px;
   padding: 5px;
-  font-size: 50px;
 }
 
 .enacted-policy {
+  font-size: 50px;
   background-color: black
   opacity: 10%;
 }
 
 .empty-policy {
   opacity: 30%;
+  font-size: 14px;
+  color: black;
 }
 
 .player-card {

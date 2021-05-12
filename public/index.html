@@ -122,7 +122,7 @@
       Separatist Policies
       <div class="d-flex">
         <div v-for="policy in enactedSeparatistPolicies" class="policy enacted-policy text-center">S</div>
-        <div v-for="policy in emptySeparatistPolicies" class="policy empty-policy"></div>
+        <div v-for="(policy, policyIndex) in emptySeparatistPolicies" class="policy empty-policy text-center">{{ board.separatistPolicyPowers[game.enacted_separatist_policy_count + policyIndex + 1] }}</div>
       </div>
     </div>
     <div class="policy-board" id="republic-policy-board">

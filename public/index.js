@@ -92,6 +92,7 @@ var GameShowPage = {
         current_hand_separatist_policy_count: 0,
       },
       nextThreePolicies: null,
+      someoneElse: {},
       pollId: null
     };
   },
@@ -154,7 +155,7 @@ var GameShowPage = {
       });
     },
     kill: function(playerId) {
-      axios.patch('/api/games/' + playerId, {is_dead: true});
+      axios.patch('/api/players/' + playerId, {is_dead: true});
     },
     peak: function() {
       axios.get('/api/games/' + this.game.id + '/peak').then((response) => {
@@ -162,6 +163,30 @@ var GameShowPage = {
         setInterval(() => {
           this.nextThreePolicies = null;
         }, 15000);
+      });
+    },
+    getIdentity: function(playerId) {
+      axios.get('/api/players/' + playerId).then((response) => {
+        this.someoneElse = response.data;
+        setInterval(() => {
+          this.someoneElse = {};
+        }, 15000);
+      });
+    },
+    appointNextQueen: function(playerId) {
+      const indexOfCurrentQueen = this.game.players.indexOf(
+        this.game.players.filter(
+          (player) => player.id === this.game.queen_id
+        )
+      );
+      const params = {
+        queen_id: playerId,
+        chancellor_id: null,
+        appointed_chancellor_id: null,
+        next_queen: this.game.players[indexOfCurrentQueen === this.game.length ? 0 : indexOfCurrentQueen + 1].id,
+      };
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
       });
     }
   },

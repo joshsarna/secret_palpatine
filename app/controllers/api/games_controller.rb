@@ -1,6 +1,9 @@
 class Api::GamesController < ApplicationController
   def peak
     game = Game.find(params[:id])
+    game.executive_action_required = nil
+    game.save()
+    game.next_queen()
     render {next_three_policies: game.remaining_policies[-3..-1]}
   end
 
@@ -92,6 +95,7 @@ class Api::GamesController < ApplicationController
     @game.turn_number = params[:turn_number] || @game.turn_number
     @game.current_hand_separatist_policy_count = params[:current_hand_separatist_policy_count] || @game.current_hand_separatist_policy_count
     @game.current_hand_republic_policy_count = params[:current_hand_republic_policy_count] || @game.current_hand_republic_policy_count
+    @game.next_queen = params[:next_queen] || @game.next_queen
 
     if @game.current_hand_separatist_policy_count == 1 && @game.current_hand_republic_policy_count == 0
       @game.enacted_separatist_policy_count += 1

@@ -188,14 +188,30 @@ var GameShowPage = {
       axios.patch('/api/games/' + this.game.id, params).then((response) => {
         this.game = response.data;
       });
+    },
+    veto: function() {
+      const params = {
+        next_executive_action: 'veto'
+      };
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
+      });
+    },
+    queenVeto: function(approved) {
+      const params = {
+        next_executive_action: null,
+        current_hand_republic_policy_count: approved ? 0 : this.game.current_hand_republic_policy_count,
+        current_hand_separatist_policy_count: approved ? 0 : this.game.current_hand_separatist_policy_count,
+      };
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
+      });
     }
   },
 
   computed: {
     board: function() {
-      // const boards = require('./boards.js').boards;
-      // return boards[this.game.players.length()];
-      return boards[5];
+      return boards[this.game.players.length()];
     },
     enactedSeparatistPolicies: function() {
       return Array(this.game.enacted_separatist_policy_count);

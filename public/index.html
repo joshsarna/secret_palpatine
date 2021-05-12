@@ -172,12 +172,15 @@
           <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
         </div>
         <div v-if="game.executive_action_required === 'muchToLearn'"><button v-on:click="peak()">Much to Learn, You Still Have</button></div>
+        <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(true)">Approve Veto</button></div>
+        <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(false)">Reject Veto</button></div>
       </div>
 
       <div v-if="game.i_am_chancellor">
         <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 2">
           <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
           <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+          <button v-if="game.enacted_separatist_policy_count === board.separatistPoliciesRequired - 1" v-on:click="veto()">Veto (Discard Both)</button>
         </div>
       </div>
 

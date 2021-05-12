@@ -15,8 +15,11 @@ json.players @game.players do |player|
   json.turn_number player.turn_number
   json.is_dead player.is_dead
   json.name player.user.name
+  json.identity player.user_id === current_user.id ? player.identity : nil
 end
 
-json.i_am_queen @game.queen_id === current_user.id
-json.i_am_chancellor @game.chancellor_id === current_user.id
-json.i_am_appointed_chancellor @game.appointed_chancellor_id === current_user.id
+json.i_am_queen @game.queen_id === @game.players.find_by({user_id: current_user.id}).id
+json.i_am_chancellor @game.chancellor_id === @game.players.find_by({user_id: current_user.id}).id
+json.i_am_appointed_chancellor @game.appointed_chancellor_id === @game.players.find_by({user_id: current_user.id}).id
+
+json.i_have_voted !!@game.votes.find_by({player_id: @game.players.find_by({user_id: current_user.id}).id})

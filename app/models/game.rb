@@ -28,10 +28,17 @@ class Game < ApplicationRecord
   end
 
   def next_queen
+    last_chancellor = chancellor_id
+    last_queen = queen_id
     next_turn_number = queen.turn_number
     next_living_queen = nil
     while !next_queen || next_queen.is_dead
-      next_turn_number += 1
+      if next_queen
+        next_turn_number = next_queen
+        next_queen = nil
+      else
+        next_turn_number += 1
+      end
       if next_turn_number === players.length
         next_turn_number = 0
       end
@@ -41,6 +48,8 @@ class Game < ApplicationRecord
         next_living_queen = possible_queen
       end
     end
+    save()
+    return next_living_queen
   end
 
   def handle_election

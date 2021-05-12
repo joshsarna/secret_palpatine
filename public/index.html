@@ -134,8 +134,42 @@
     </div>
     <div class="d-flex">
       <div v-for="player in game.players">
-        <div class="player-card" v-bind:class="player.is_dead && 'dead-player'">{{ player.name }}</div>
+        <div class="player-card" v-bind:class="player.is_dead && 'dead-player'">
+        {{ player.name }}
+        <div v-if="game.queen_id === player.id">Queen</div>
+        <div v-if="game.chancellor_id === player.id">Chancellor</div>
+        <div v-if="game.appointed_chancellor_id === player.id">Appointed Chancellor</div>
+        <div v-if="game.i_am_queen && !game.appointed_chancellor_id && game.last_queen !== player.id && game.last_chancellor !== player.id && game.queen_id !== player.id"><button v-on:click="appointChancellor(player.id)">Appoint Chancellor</button></div>
       </div>
+      </div>
+    </div>
+
+    <div v-if="!!game.winner">
+      <div v-if="game.winner === 'sith'">The Sith Win</div>
+      <div v-if="game.winner === 'senate'">The Senate Win</div>
+    </div>
+
+    <div v-if="!game.winner">
+
+      <div v-if="game.i_am_queen">
+        <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 3">
+          <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
+          <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+        </div>
+      </div>
+
+      <div v-if="game.i_am_chancellor">
+        <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 2">
+          <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
+          <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+        </div>
+      </div>
+
+      <div v-if="game.appointed_chancellor_id && !game.i_have_voted">
+        <button v-on:click="vote(true)">Yes</button>
+        <button v-on:click="vote(false)">No</button>
+      </div>
+
     </div>
   </div>
 </template>

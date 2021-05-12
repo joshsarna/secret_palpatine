@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_212643) do
+ActiveRecord::Schema.define(version: 2021_05_12_015918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,10 @@ ActiveRecord::Schema.define(version: 2021_05_11_212643) do
     t.integer "current_hand_separatist_policy_count"
     t.string "remaining_policies"
     t.integer "failed_election_count"
+    t.string "last_queen"
+    t.string "next_queen"
+    t.string "last_chancellor"
+    t.string "winner"
   end
 
   create_table "players", force: :cascade do |t|

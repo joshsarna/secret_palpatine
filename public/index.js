@@ -119,7 +119,40 @@ var GameShowPage = {
     clearInterval(this.pollId);
   },
 
-  methods: {},
+  methods: {
+    appointChancellor: function(playerId) {
+      const params = {chancellor_id: playerId};
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
+      });
+    },
+    discardSeparatistCard: function() {
+      const params = {
+        current_hand_separatist_policy_count: this.game.current_hand_separatist_policy_count - 1
+      };
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
+      });
+    },
+    discardRepublicCard: function() {
+      const params = {
+        current_hand_republic_policy_count: this.game.current_hand_republic_policy_count - 1
+      };
+      axios.patch('/api/games/' + this.game.id, params).then((response) => {
+        this.game = response.data;
+      });
+    },
+    vote: function(vote) {
+      const params = {
+        game_id: this.game.id,
+        in_favor: vote
+      };
+      axios.patch('/api/votes', params).then((response) => {
+        this.game = response.data;
+      });
+    }
+  },
+
   computed: {
     board: function() {
       // const boards = require('./boards.js').boards;

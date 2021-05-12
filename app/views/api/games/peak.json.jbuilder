@@ -1,0 +1,1 @@
+json.next_three_policies @game.remaining_policies[-3..-1]

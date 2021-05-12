@@ -154,7 +154,7 @@
 
     <div v-if="!game.winner">
 
-      <div>Identity: {{ game.my_identity }}</div>
+      <div v-if="!!game.my_identity">Identity: {{ game.my_identity }}</div>
 
       <div v-if="!!nextThreePolicies">
         Next Three Policies:

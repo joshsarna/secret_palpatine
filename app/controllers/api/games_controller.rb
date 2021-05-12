@@ -1,10 +1,10 @@
 class Api::GamesController < ApplicationController
   def peak
-    game = Game.find(params[:id])
-    game.executive_action_required = nil
-    game.save()
-    game.next_queen()
-    render {next_three_policies: game.remaining_policies[-3..-1]}
+    @game = Game.find(params[:id])
+    @game.executive_action_required = nil
+    @game.save()
+    @game.next_queen()
+    render 'peak.json.jbuilder'
   end
 
   def create

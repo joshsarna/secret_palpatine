@@ -159,7 +159,7 @@ var GameShowPage = {
     },
     peak: function() {
       axios.get('/api/games/' + this.game.id + '/peak').then((response) => {
-        this.nextThreePolicies = response.data.nextThreePolicies;
+        this.nextThreePolicies = response.data.next_three_policies;
         setInterval(() => {
           this.nextThreePolicies = null;
         }, 15000);

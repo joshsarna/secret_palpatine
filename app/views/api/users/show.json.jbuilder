@@ -1,0 +1,11 @@
+json.name @user.name
+json.email @user.email
+json.total_games_as_sith @user.total_games_as_sith
+json.total_games_as_senator @user.total_games_as_senator
+json.total_games_as_palpatine @user.total_games_as_palpatine
+json.wins_as_sith @user.wins_as_sith
+json.losses_as_sith @user.losses_as_sith
+json.wins_as_senator @user.wins_as_senator
+json.losses_as_senator @user.losses_as_senator
+json.wins_as_palpatine @user.wins_as_palpatine
+json.losses_as_palpatine @user.losses_as_palpatine

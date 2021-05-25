@@ -15,7 +15,7 @@ json.players @game.players do |player|
   json.turn_number player.turn_number
   json.is_dead player.is_dead
   json.name player.user.name
-  json.identity player.user_id === current_user.id ? player.identity : nil
+  json.identity player.user_id === current_user.id || @game.can_see_other_identities(current_user) ? player.identity : nil
 end
 
 json.i_am_queen @game.queen_id === @game.players.find_by({user_id: current_user.id}).id

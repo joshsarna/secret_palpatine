@@ -27,6 +27,16 @@ class Game < ApplicationRecord
     return false
   end
 
+  def can_see_other_identities(current_user)
+    player = players.find_by({user_id: current_user.id})
+    if player.identity == 'sith'
+      return true
+    elsif player.identity == 'palpatine'
+      return players.length < 7
+    end
+    return false
+  end
+
   def next_queen
     last_chancellor = chancellor_id
     last_queen = queen_id
@@ -62,7 +72,13 @@ class Game < ApplicationRecord
       failed_election_count = 0
       chancellor_id = appointed_chancellor_id
       appointed_chancellor_id = nil
-      draw()
+
+      chancellor = players.find(chancellor_id)
+      if enacted_separatist_policy_count >= 3 && chancellor.identity == 'palpatine'
+        end_game('sith', 'Palpatine was elected Supreme Chancellor')
+      else
+        draw()
+      end
       save()
     else
       # election failed
@@ -104,6 +120,32 @@ class Game < ApplicationRecord
       remaining_policies = ['R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S'].shuffle.join('')
       remaining_republic_policy_count = 6
       remaining_separatist_policy_count = 11
+    end
+  end
+
+  def end_game(game_winner, game_win_reason)
+    winner = game_winner
+    win_reason = game_win_reason
+
+    players.each do |player|
+      user = player.user
+
+      if game_winner == 'sith'
+        if player.identity == 'senator'
+          user.losses_as_senator += 1
+        else
+          user['wins_as_' + player.identity] += 1
+        end
+      else
+        if player.identity == 'senator'
+          user.wins_as_senator += 1
+        else
+          user['losses_as_' + player.identity] += 1
+        end
+      end
+
+      user.save
+      save()
     end
   end
 end

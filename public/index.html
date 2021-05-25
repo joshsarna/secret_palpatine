@@ -31,6 +31,7 @@
                   <li><a class="dropdown-item" href="/#/signup">Sign Up</a></li>
                   <li><a class="dropdown-item" href="/#/login">Log In</a></li>
                   <li><a class="dropdown-item" href="/#/logout">Log Out</a></li>
+                  <li><a class="dropdown-item" href="/#/profile">Profile</a></li>
                 </ul>
               </li>
             </ul>
@@ -48,16 +49,18 @@
 <template id="home-page">
   <div class="vue-component">
 
-    <h1>Welcome to Secret Palpatine</h1>
-    <div class="flex">
-      <div class="flex-item">
-        <h4>Start a New Game</h4>
-        <button v-on:click="createGame">New Game</button>
-      </div>
-      <div class="flex-item">
-        <h4>Join an Existing Game</h4>
-        <div>Game Code: <input type="text" class="form-control" v-model="gameToJoin" /></div>
-        <button v-on:click="joinGame">Join Game</button>
+    <div class="container">
+      <h1>Welcome to Secret Palpatine</h1>
+      <div class="flex">
+        <div class="flex-item">
+          <h4>Start a New Game</h4>
+          <button v-on:click="createGame">New Game</button>
+        </div>
+        <div class="flex-item">
+          <h4>Join an Existing Game</h4>
+          <div>Game Code: <input type="text" class="form-control game-code-input" v-model="gameToJoin" /></div>
+          <button v-on:click="joinGame">Join Game</button>
+        </div>
       </div>
     </div>
 
@@ -118,81 +121,126 @@
 
 <template class="policy-board" id="game-show-page">
   <div class="vue-component">
-    <div class="policy-board" id="separatist-policy-board">
-      Separatist Policies
-      <div class="d-flex">
-        <div v-for="policy in enactedSeparatistPolicies" class="policy enacted-policy text-center">S</div>
-        <div v-for="(policy, policyIndex) in emptySeparatistPolicies" class="policy empty-policy text-center">{{ board.separatistPolicyPowers[game.enacted_separatist_policy_count + policyIndex + 1] }}</div>
-      </div>
-    </div>
-    <div class="policy-board" id="republic-policy-board">
-      Republic Policies
-      <div class="d-flex">
-        <div v-for="policy in enactedRepublicPolicies" class="policy enacted-policy text-center">R</div>
-        <div v-for="policy in emptyRepublicPolicies" class="policy empty-policy"></div>
-      </div>
-    </div>
-    <div class="d-flex">
-      <div v-for="player in game.players">
-        <div class="player-card" v-bind:class="player.is_dead && 'dead-player'">
-        {{ player.name }}
-        <div v-if="game.queen_id === player.id">Queen</div>
-        <div v-if="game.chancellor_id === player.id">Chancellor</div>
-        <div v-if="game.appointed_chancellor_id === player.id">Appointed Chancellor</div>
-        <div v-if="game.i_am_queen && !game.appointed_chancellor_id && game.last_queen !== player.id && game.last_chancellor !== player.id && game.queen_id !== player.id && !player.is_dead"><button v-on:click="appointChancellor(player.id)">Appoint Chancellor</button></div>
-        <div v-if="game.i_am_queen && game.executive_action_required === 'order66' && !player.is_dead"><button v-on:click="kill(player.id)">Order 66</button></div>
-        <div v-if="game.i_am_queen && game.executive_action_required === 'helloThere' && !player.is_dead"><button v-on:click="getIdentity(player.id)">Hello There</button></div>
-        <div v-if="game.i_am_queen && game.executive_action_required === 'iAmTheSenate' && !player.is_dead"><button v-on:click="appointNextQueen(player.id)">I Am The Senate</button></div>
-      </div>
-      </div>
-    </div>
-
-    <div v-if="!!game.winner">
-      <div v-if="game.winner === 'sith'">The Sith Win</div>
-      <div v-if="game.winner === 'senate'">The Senate Win</div>
-    </div>
-
-    <div v-if="!game.winner">
-
-      <div v-if="!!game.my_identity">Identity: {{ game.my_identity }}</div>
-
-      <div v-if="!!nextThreePolicies">
-        Next Three Policies:
-        {{ nextThreePolicies }}
-      </div>
-
-      <div v-if="!!someoneElse.name">
-        {{ someoneElse.name }} is a:
-        {{ someoneElse.identity }}
-      </div>
-
-      <div v-if="!game.has_started && game.players.length >= 5"><button v-on:click="start()">Start</button></div>
-
-      <div v-if="game.i_am_queen">
-        <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 3">
-          <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
-          <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+    <div class="container">
+      <div class="policy-board" id="separatist-policy-board">
+        Separatist Policies
+        <div class="d-flex">
+          <div v-for="policy in enactedSeparatistPolicies" class="policy enacted-policy text-center">S</div>
+          <div v-for="(policy, policyIndex) in emptySeparatistPolicies" class="policy empty-policy text-center">{{ board.separatistPolicyPowers[game.enacted_separatist_policy_count + policyIndex + 1] }}</div>
         </div>
-        <div v-if="game.executive_action_required === 'muchToLearn'"><button v-on:click="peak()">Much to Learn, You Still Have</button></div>
-        <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(true)">Approve Veto</button></div>
-        <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(false)">Reject Veto</button></div>
       </div>
-
-      <div v-if="game.i_am_chancellor">
-        <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 2">
-          <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
-          <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
-          <button v-if="game.enacted_separatist_policy_count === board.separatistPoliciesRequired - 1" v-on:click="veto()">Veto (Discard Both)</button>
+      <div class="policy-board" id="republic-policy-board">
+        Republic Policies
+        <div class="d-flex">
+          <div v-for="policy in enactedRepublicPolicies" class="policy enacted-policy text-center">R</div>
+          <div v-for="policy in emptyRepublicPolicies" class="policy empty-policy"></div>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div v-for="player in game.players">
+          <div class="player-card" v-bind:class="player.is_dead && 'dead-player'">
+          {{ player.name }}
+          <div v-if="!!player.identity">Identity: {{player.identity}}</div>
+          <div v-if="game.queen_id === player.id">Queen</div>
+          <div v-if="game.chancellor_id === player.id">Chancellor</div>
+          <div v-if="game.appointed_chancellor_id === player.id">Appointed Chancellor</div>
+          <div v-if="game.i_am_queen && !game.appointed_chancellor_id && (game.last_queen !== player.id || game.players.length <= 5) && game.last_chancellor !== player.id && game.queen_id !== player.id && !player.is_dead"><button v-on:click="appointChancellor(player.id)">Appoint Chancellor</button></div>
+          <div v-if="game.i_am_queen && game.executive_action_required === 'order66' && !player.is_dead"><button v-on:click="kill(player.id)">Order 66</button></div>
+          <div v-if="game.i_am_queen && game.executive_action_required === 'helloThere' && !player.is_dead"><button v-on:click="getIdentity(player.id)">Hello There</button></div>
+          <div v-if="game.i_am_queen && game.executive_action_required === 'iAmTheSenate' && !player.is_dead"><button v-on:click="appointNextQueen(player.id)">I Am The Senate</button></div>
+        </div>
         </div>
       </div>
 
-      <div v-if="game.appointed_chancellor_id && !game.i_have_voted">
-        <button v-on:click="vote(true)">Yes</button>
-        <button v-on:click="vote(false)">No</button>
+      <div v-if="!!game.winner">
+        <div v-if="game.winner === 'sith'">The Sith Win</div>
+        <div v-if="game.winner === 'senate'">The Senate Win</div>
+
+        <div v-if="!!game.win_reason">{{ game.win_reason }}</div>
       </div>
 
+      <div v-if="!game.winner">
+        <div v-if="!!game.my_identity">Identity: {{ game.my_identity }}</div>
+
+        <div v-if="!!nextThreePolicies">
+          Next Three Policies:
+          {{ nextThreePolicies }}
+        </div>
+
+        <div v-if="!!someoneElse.name">
+          {{ someoneElse.name }} is a:
+          {{ someoneElse.identity }}
+        </div>
+
+        <div v-if="!game.has_started && game.players.length >= 5"><button v-on:click="start()">Start</button></div>
+        <div v-if="!game.has_started && game.players.length < 5">{{5 - game.players.length}} more players needed</div>
+
+        <div v-if="game.i_am_queen">
+          <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 3">
+            <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
+            <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+          </div>
+          <div v-if="game.executive_action_required === 'muchToLearn'"><button v-on:click="peak()">Much to Learn, You Still Have</button></div>
+          <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(true)">Approve Veto</button></div>
+          <div v-if="game.executive_action_required === 'veto'"><button v-on:click="queenVeto(false)">Reject Veto</button></div>
+        </div>
+
+        <div v-if="game.i_am_chancellor">
+          <div v-if="current_hand_separatist_policy_count !== null && current_hand_republic_policy_count !== null && current_hand_separatist_policy_count + current_hand_republic_policy_count === 2">
+            <button v-if="current_hand_separatist_policy_count > 0" v-on:click="discardSeparatistCard()">Discard Separatist Policy</button>
+            <button v-if="current_hand_republic_policy_count > 0" v-on:click="discardRepublicCard()">Discard Republic Policy</button>
+            <button v-if="game.enacted_separatist_policy_count === board.separatistPoliciesRequired - 1" v-on:click="veto()">Veto (Discard Both)</button>
+          </div>
+        </div>
+
+        <div v-if="game.appointed_chancellor_id && !game.i_have_voted">
+          <button v-on:click="vote(true)">Yes</button>
+          <button v-on:click="vote(false)">No</button>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
 
-<!-- choose chancellor, vote, discard first, discard second -->
+<template id="profile">
+  <div class="vue-component">
+
+    <div class="container">
+      <div>Name: {{ user.name }}</div>
+      <div>Email: {{ user.email }}</div>
+
+      <table class="profile-stats">
+        <tr>
+          <th>As</th>
+          <th>Games Played</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Unfinished Games</th>
+        </tr>
+        <tr>
+          <td>Palpatine</td>
+          <td>{{ user.total_games_as_palpatine }}</td>
+          <td>{{ user.wins_as_palpatine }}</td>
+          <td>{{ user.losses_as_palpatine }}</td>
+          <td>{{ user.total_games_as_palpatine - user.wins_as_palpatine - user.losses_as_palpatine }}</td>
+        </tr>
+        <tr>
+          <td>Sith (Non-Palpatine)</td>
+          <td>{{ user.total_games_as_sith }}</td>
+          <td>{{ user.wins_as_sith }}</td>
+          <td>{{ user.losses_as_sith }}</td>
+          <td>{{ user.total_games_as_sith - user.wins_as_sith - user.losses_as_sith }}</td>
+        </tr>
+        <tr>
+          <td>Senator</td>
+          <td>{{ user.total_games_as_senator }}</td>
+          <td>{{ user.wins_as_senator }}</td>
+          <td>{{ user.losses_as_senator }}</td>
+          <td>{{ user.total_games_as_senator - user.wins_as_senator - user.losses_as_senator }}</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</template>

@@ -67,12 +67,16 @@ class Api::GamesController < ApplicationController
         if i < palpatine_count
           player.identity = 'palpatine'
         elsif i < palpatine_count + separatist_count
-          player.identity = 'separatist'
+          player.identity = 'sith'
         else
-          player.identity = 'republic'
+          player.identity = 'senator'
         end
 
-        player.save
+        if player.save
+          user = player.user
+          user['total_games_as_' + player.identity] += 1
+          user.save
+        end
       end
     end
 
@@ -101,7 +105,7 @@ class Api::GamesController < ApplicationController
       @game.enacted_separatist_policy_count += 1
       @game.executive_action_required = params[:executive_action_required]
       if @game.enacted_separatist_policy_count == 6
-        @game.winner = 'sith'
+        @game.end_game('sith', 'Six Separatist policies have been enacted')
       else
         if !@game.executive_action_required
           @game.next_queen
@@ -110,7 +114,7 @@ class Api::GamesController < ApplicationController
     elsif @game.current_hand_separatist_policy_count == 0 && @game.current_hand_republic_policy_count == 1
       @game.current_hand_republic_policy_count += 1
       if @game.current_hand_republic_policy_count == 5
-        @game.winner = 'senate'
+        @game.end_game('senate', 'Five Republic policies have been enacted')
       else
         @game.next_queen
       end

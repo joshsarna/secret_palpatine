@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_12_021550) do
+ActiveRecord::Schema.define(version: 2021_05_25_193747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_05_12_021550) do
     t.string "last_chancellor"
     t.string "winner"
     t.string "executive_action_required"
+    t.string "win_reason"
   end
 
   create_table "players", force: :cascade do |t|
@@ -54,6 +55,15 @@ ActiveRecord::Schema.define(version: 2021_05_12_021550) do
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_games_as_sith"
+    t.integer "total_games_as_senator"
+    t.integer "total_games_as_palpatine"
+    t.integer "wins_as_sith"
+    t.integer "losses_as_sith"
+    t.integer "wins_as_senator"
+    t.integer "losses_as_senator"
+    t.integer "wins_as_palpatine"
+    t.integer "losses_as_palpatine"
   end
 
   create_table "votes", force: :cascade do |t|

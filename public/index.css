@@ -1,3 +1,7 @@
+.game-code-input {
+  width: 200px;
+}
+
 .policy-board {
   opacity: 70%;
   margin: 10px;
@@ -31,7 +35,7 @@
 }
 
 .empty-policy {
-  opacity: 30%;
+  opacity: 50%;
   font-size: 14px;
   color: black;
 }
@@ -53,4 +57,18 @@
 
 .active-player {
   border-color: green;
+}
+
+.profile-stats {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+.profile-stats th, .profile-stats td {
+  border-style: solid;
+  border-width: 1px;
+  border-color: gray;
+  margin: 0px;
+  padding: 5px;
 }

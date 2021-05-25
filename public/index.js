@@ -75,6 +75,26 @@ const boards = {
   },
 };
 
+var UserShowPage = {
+  template: "#profile",
+  data: function() {
+    return {
+      user: {}
+    };
+  },
+  created: function() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {  
+      router.push('/logout');
+    }
+    axios.get('/api/users/' + userId).then((response) => {
+      this.user = response.data;
+    });
+  },
+  methods: {
+  }
+};
+
 var GameShowPage = {
   template: "#game-show-page",
   data: function() {
@@ -239,6 +259,7 @@ var LogoutPage = {
   created: function() {
     axios.defaults.headers.common["Authorization"] = undefined;
     localStorage.removeItem("jwt");
+    localStorage.removeItem("userId");
     router.push("/");
   }
 };
@@ -263,6 +284,7 @@ var LoginPage = {
           axios.defaults.headers.common["Authorization"] =
             "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
+          localStorage.setItem("userId", response.data.user_id);
           router.push("/");
         })
         .catch(
@@ -351,7 +373,8 @@ var router = new VueRouter({
     { path: "/signup", component: SignupPage },
     { path: "/login", component: LoginPage },
     { path: "/logout", component: LogoutPage },
-    { path: "/games/:id", component: GameShowPage }
+    { path: "/games/:id", component: GameShowPage },
+    { path: "/profile", component: UserShowPage }
   ],
   scrollBehavior: function(to, from, savedPosition) {
     return { x: 0, y: 0 };

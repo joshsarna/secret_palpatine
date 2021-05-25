@@ -4,7 +4,7 @@ class Api::PlayersController < ApplicationController
 
     @player = game.players.find_by({user_id: current_user.id})
 
-    if !@player
+    if !@player && !game.has_started && game.players.length < 10
       @player = Player.new({
         game_id: game.id,
         user_id: current_user.id,
@@ -37,8 +37,15 @@ class Api::PlayersController < ApplicationController
     if @player.save
       game = Game.find(@player.game_id)
       game.executive_action_required = nil
-      game.save()
-      game.next_queen()
+
+      if @player.identity == 'palpatine'
+        game.end_game('senate', 'Palpatine\'s fate was decided by the senate')
+        game.save
+      else
+        game.save()
+        game.next_queen()
+      end
+
       render 'show.json.jbuilder'
     end
   end
